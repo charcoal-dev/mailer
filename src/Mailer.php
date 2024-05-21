@@ -17,6 +17,7 @@ namespace Charcoal\Mailer;
 use Charcoal\Mailer\Agents\MailerAgentInterface;
 use Charcoal\Mailer\Agents\Sendmail;
 use Charcoal\Mailer\Message\Body;
+use Charcoal\Mailer\Message\CompiledMimeMessage;
 use Charcoal\Mailer\Message\Sender;
 
 /**
@@ -49,5 +50,16 @@ class Mailer
     public function compose(string $subject, Body $body, ?Sender $sender): Message
     {
         return new Message($this, $subject, $body, $sender);
+    }
+
+    /**
+     * @param \Charcoal\Mailer\Message\CompiledMimeMessage|\Charcoal\Mailer\Message $message
+     * @param string ...$emails
+     * @return int
+     * @throws \Charcoal\Mailer\Exception\EmailComposeException
+     */
+    public function send(CompiledMimeMessage|Message $message, string ...$emails): int
+    {
+        return $this->agent->send($message, $emails);
     }
 }
