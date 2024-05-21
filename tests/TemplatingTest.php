@@ -54,7 +54,7 @@ class TemplatingTest extends \PHPUnit\Framework\TestCase
             "domain" => "charcoal.dev"
         ]);
 
-        $defaultTemplate = new \Charcoal\Mailer\Templating\EmailTemplateFile("default", "template.html");
+        $defaultTemplate = new \Charcoal\Mailer\Templating\EmailTemplateFile("default", __DIR__ . "/template.html");
         $templatingEngine->registerTemplate($defaultTemplate);
         $this->assertTrue(str_starts_with($defaultTemplate->html, "<!DOCTYPE html>"), "Beginning of HTML template");
         $this->assertTrue(str_ends_with($defaultTemplate->html, "</html>"), "Ending of HTML template");
