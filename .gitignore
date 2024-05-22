@@ -4,6 +4,8 @@ workspace/
 composer.phar
 composer.lock
 
+tests/SmtpConfig.php
+
 phpunit.phar
 /.phpunit.result.cache
 /coverage/

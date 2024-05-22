@@ -148,6 +148,14 @@ class SmtpClient implements MailerAgentInterface
     }
 
     /**
+     * @return array
+     */
+    public function getServerOptions(): array
+    {
+        return $this->serverOptions;
+    }
+
+    /**
      * @return void
      */
     public function disconnect(): void
