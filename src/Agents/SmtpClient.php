@@ -74,7 +74,7 @@ class SmtpClient implements MailerAgentInterface
      * @return void
      * @throws \Charcoal\Mailer\Exception\SmtpClientException
      */
-    private function connect(): void
+    public function connect(): void
     {
         if (!$this->stream) {
             $errorNum = 0;
