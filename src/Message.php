@@ -1,24 +1,18 @@
 <?php
-/*
- * This file is a part of "charcoal-dev/mailer" package.
- * https://github.com/charcoal-dev/mailer
- *
- * Copyright (c) Furqan A. Siddiqui <hello@furqansiddiqui.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code or visit following link:
- * https://github.com/charcoal-dev/mailer/blob/master/LICENSE
+/**
+ * Part of the "charcoal-dev/mailer" package.
+ * @link https://github.com/charcoal-dev/mailer
  */
 
 declare(strict_types=1);
 
 namespace Charcoal\Mailer;
 
-use Charcoal\Mailer\Exception\EmailComposeException;
+use Charcoal\Mailer\Enums\EOL;
+use Charcoal\Mailer\Exceptions\EmailComposeException;
 use Charcoal\Mailer\Message\Attachment;
 use Charcoal\Mailer\Message\Body;
 use Charcoal\Mailer\Message\CompiledMimeMessage;
-use Charcoal\Mailer\Message\EndOfLine;
 use Charcoal\Mailer\Message\Sender;
 
 /**
@@ -28,7 +22,7 @@ use Charcoal\Mailer\Message\Sender;
 class Message
 {
     public Sender $sender;
-    public EndOfLine $eolChar;
+    public EOL $eolChar;
     private array $headers = [];
     private array $attachments = [];
 
@@ -53,7 +47,8 @@ class Message
      * @param string $key
      * @param string $value
      * @return $this
-     * @throws \Charcoal\Mailer\Exception\EmailComposeException
+     * @throws \Charcoal\Mailer\Exceptions\EmailComposeException
+     * @api
      */
     public function header(string $key, string $value): static
     {
@@ -72,7 +67,8 @@ class Message
      * @param string $disposition
      * @param string|null $contentId
      * @return \Charcoal\Mailer\Message\Attachment
-     * @throws \Charcoal\Mailer\Exception\EmailComposeException
+     * @throws \Charcoal\Mailer\Exceptions\EmailComposeException
+     * @api
      */
     public function attach(
         string  $filePath,
@@ -89,6 +85,7 @@ class Message
 
     /**
      * @return array
+     * @api
      */
     public function getAttachments(): array
     {
@@ -97,8 +94,8 @@ class Message
 
     /**
      * @param string $separator
-     * @return \Charcoal\Mailer\Message\CompiledMimeMessage
-     * @throws \Charcoal\Mailer\Exception\EmailComposeException
+     * @return CompiledMimeMessage
+     * @throws EmailComposeException
      */
     public function compile(string $separator = ""): CompiledMimeMessage
     {

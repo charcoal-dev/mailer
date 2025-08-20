@@ -1,20 +1,14 @@
 <?php
-/*
- * This file is a part of "charcoal-dev/mailer" package.
- * https://github.com/charcoal-dev/mailer
- *
- * Copyright (c) Furqan A. Siddiqui <hello@furqansiddiqui.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code or visit following link:
- * https://github.com/charcoal-dev/mailer/blob/master/LICENSE
+/**
+ * Part of the "charcoal-dev/mailer" package.
+ * @link https://github.com/charcoal-dev/mailer
  */
 
 declare(strict_types=1);
 
 namespace Charcoal\Mailer;
 
-use Charcoal\Mailer\Exception\TemplatingException;
+use Charcoal\Mailer\Exceptions\TemplatingException;
 use Charcoal\Mailer\Templating\DataBindingTrait;
 use Charcoal\Mailer\Templating\EmailBodyHtml;
 use Charcoal\Mailer\Templating\EmailTemplateFile;
@@ -35,8 +29,8 @@ class TemplatingEngine
     use DataBindingTrait;
 
     /**
-     * @param \Charcoal\Mailer\Mailer $mailer
-     * @param string $pathToMessages Path to directory that contains all e-mail HTML bodies files
+     * @param Mailer $mailer
+     * @param string $pathToMessages
      */
     public function __construct(public readonly Mailer $mailer, string $pathToMessages)
     {
@@ -45,10 +39,10 @@ class TemplatingEngine
     }
 
     /**
-     * @param string $filename Filename inside bodies directory WITHOUT ".html" suffix
+     * @param string $filename
      * @param bool $runtimeMemory
-     * @return \Charcoal\Mailer\Templating\EmailBodyHtml
-     * @throws \Charcoal\Mailer\Exception\TemplatingException
+     * @return EmailBodyHtml
+     * @throws TemplatingException
      */
     public function getBody(string $filename, bool $runtimeMemory = true): EmailBodyHtml
     {
@@ -63,7 +57,7 @@ class TemplatingEngine
     }
 
     /**
-     * @param \Charcoal\Mailer\Templating\EmailTemplateFile $template
+     * @param EmailTemplateFile $template
      * @return $this
      */
     public function registerTemplate(EmailTemplateFile $template): static
@@ -74,8 +68,8 @@ class TemplatingEngine
 
     /**
      * @param string $template
-     * @return \Charcoal\Mailer\Templating\EmailTemplateFile
-     * @throws \Charcoal\Mailer\Exception\TemplatingException
+     * @return EmailTemplateFile
+     * @throws TemplatingException
      */
     public function getTemplate(string $template): EmailTemplateFile
     {
@@ -88,13 +82,13 @@ class TemplatingEngine
     }
 
     /**
-     * @param \Charcoal\Mailer\Templating\EmailTemplateFile|string $template
-     * @param \Charcoal\Mailer\Templating\EmailBodyHtml|string $body
+     * @param EmailTemplateFile|string $template
+     * @param EmailBodyHtml|string $body
      * @param string $subject
      * @param string|null $preHeader
-     * @return \Charcoal\Mailer\Templating\RawTemplatedEmail
-     * @throws \Charcoal\Mailer\Exception\DataBindException
-     * @throws \Charcoal\Mailer\Exception\TemplatingException
+     * @return RawTemplatedEmail
+     * @throws Exceptions\DataBindException
+     * @throws TemplatingException
      */
     public function create(
         EmailTemplateFile|string $template,

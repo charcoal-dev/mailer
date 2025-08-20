@@ -1,13 +1,7 @@
 <?php
-/*
- * This file is a part of "charcoal-dev/mailer" package.
- * https://github.com/charcoal-dev/mailer
- *
- * Copyright (c) Furqan A. Siddiqui <hello@furqansiddiqui.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code or visit following link:
- * https://github.com/charcoal-dev/mailer/blob/master/LICENSE
+/**
+ * Part of the "charcoal-dev/mailer" package.
+ * @link https://github.com/charcoal-dev/mailer
  */
 
 declare(strict_types=1);
@@ -24,16 +18,16 @@ use Charcoal\Mailer\Message\Sender;
  * Class Mailer
  * @package Charcoal\Mailer
  */
-class Mailer
+final readonly class Mailer
 {
-    public const VERSION = "0.1.0";
+    public const string VERSION = "0.2.0";
 
     public MailerAgentInterface $agent;
     public ClientConfig $clientConfig;
 
     /**
-     * @param \Charcoal\Mailer\Message\Sender $sender
-     * @param \Charcoal\Mailer\Agents\MailerAgentInterface|null $agent
+     * @param Sender $sender
+     * @param MailerAgentInterface|null $agent
      */
     public function __construct(public Sender $sender, ?MailerAgentInterface $agent = null)
     {
@@ -43,9 +37,9 @@ class Mailer
 
     /**
      * @param string $subject
-     * @param \Charcoal\Mailer\Message\Body $body
-     * @param \Charcoal\Mailer\Message\Sender|null $sender
-     * @return \Charcoal\Mailer\Message
+     * @param Body $body
+     * @param Sender|null $sender
+     * @return Message
      */
     public function compose(string $subject, Body $body, ?Sender $sender): Message
     {
@@ -53,10 +47,11 @@ class Mailer
     }
 
     /**
-     * @param \Charcoal\Mailer\Message\CompiledMimeMessage|\Charcoal\Mailer\Message $message
+     * @param CompiledMimeMessage|Message $message
      * @param string ...$emails
      * @return int
-     * @throws \Charcoal\Mailer\Exception\EmailComposeException
+     * @throws Exceptions\EmailComposeException
+     * @api
      */
     public function send(CompiledMimeMessage|Message $message, string ...$emails): int
     {

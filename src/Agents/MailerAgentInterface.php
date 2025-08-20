@@ -1,13 +1,7 @@
 <?php
-/*
- * This file is a part of "charcoal-dev/mailer" package.
- * https://github.com/charcoal-dev/mailer
- *
- * Copyright (c) Furqan A. Siddiqui <hello@furqansiddiqui.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code or visit following link:
- * https://github.com/charcoal-dev/mailer/blob/master/LICENSE
+/**
+ * Part of the "charcoal-dev/mailer" package.
+ * @link https://github.com/charcoal-dev/mailer
  */
 
 declare(strict_types=1);
@@ -24,7 +18,7 @@ use Charcoal\Mailer\Message\CompiledMimeMessage;
 interface MailerAgentInterface
 {
     /**
-     * @param \Charcoal\Mailer\Message\CompiledMimeMessage|\Charcoal\Mailer\Message $message
+     * @param CompiledMimeMessage|Message $message
      * @param array $recipients
      * @return int
      */

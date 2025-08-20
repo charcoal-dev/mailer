@@ -1,13 +1,7 @@
 <?php
-/*
- * This file is a part of "charcoal-dev/mailer" package.
- * https://github.com/charcoal-dev/mailer
- *
- * Copyright (c) Furqan A. Siddiqui <hello@furqansiddiqui.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code or visit following link:
- * https://github.com/charcoal-dev/mailer/blob/master/LICENSE
+/**
+ * Part of the "charcoal-dev/mailer" package.
+ * @link https://github.com/charcoal-dev/mailer
  */
 
 declare(strict_types=1);
@@ -21,10 +15,10 @@ use Charcoal\Mailer\Message\CompiledMimeMessage;
  * Class Sendmail
  * @package Charcoal\Mailer\Agents
  */
-class Sendmail implements MailerAgentInterface
+final class Sendmail implements MailerAgentInterface
 {
     /**
-     * @param \Charcoal\Mailer\Message|\Charcoal\Mailer\Message\CompiledMimeMessage $message
+     * @param Message|CompiledMimeMessage $message
      * @param array $recipients
      * @return int
      * @throws \Charcoal\Mailer\Exceptions\EmailComposeException
