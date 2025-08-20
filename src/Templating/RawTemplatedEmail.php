@@ -1,20 +1,14 @@
 <?php
-/*
- * This file is a part of "charcoal-dev/mailer" package.
- * https://github.com/charcoal-dev/mailer
- *
- * Copyright (c) Furqan A. Siddiqui <hello@furqansiddiqui.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code or visit following link:
- * https://github.com/charcoal-dev/mailer/blob/master/LICENSE
+/**
+ * Part of the "charcoal-dev/mailer" package.
+ * @link https://github.com/charcoal-dev/mailer
  */
 
 declare(strict_types=1);
 
 namespace Charcoal\Mailer\Templating;
 
-use Charcoal\Mailer\Exception\TemplatingException;
+use Charcoal\Mailer\Exceptions\TemplatingException;
 use Charcoal\Mailer\Message;
 use Charcoal\Mailer\Message\Body;
 use Charcoal\Mailer\Message\Sender;
@@ -37,7 +31,7 @@ class RawTemplatedEmail
      * @param \Charcoal\Mailer\Templating\EmailBodyHtml $body
      * @param string $subject
      * @param string|null $preHeader
-     * @throws \Charcoal\Mailer\Exception\DataBindException
+     * @throws \Charcoal\Mailer\Exceptions\DataBindException
      */
     public function __construct(
         public readonly TemplatingEngine $engine,
@@ -66,7 +60,7 @@ class RawTemplatedEmail
      * @param string $modifierStr
      * @param string $modifier
      * @return array
-     * @throws \Charcoal\Mailer\Exception\TemplatingException
+     * @throws \Charcoal\Mailer\Exceptions\TemplatingException
      */
     private function modifierArguments(string $modifierStr, string $modifier): array
     {
@@ -116,7 +110,7 @@ class RawTemplatedEmail
      * @param int $argNum
      * @param string $modifier
      * @return int|bool
-     * @throws \Charcoal\Mailer\Exception\TemplatingException
+     * @throws \Charcoal\Mailer\Exceptions\TemplatingException
      */
     private function checkBlobArg(string $blob, int $argNum, string $modifier): int|bool
     {
@@ -133,7 +127,7 @@ class RawTemplatedEmail
 
     /**
      * @return string
-     * @throws \Charcoal\Mailer\Exception\TemplatingException
+     * @throws \Charcoal\Mailer\Exceptions\TemplatingException
      */
     public function generateHTML(): string
     {
@@ -165,7 +159,7 @@ class RawTemplatedEmail
     /**
      * @param \Charcoal\Mailer\Message\Sender|null $sender
      * @return \Charcoal\Mailer\Message
-     * @throws \Charcoal\Mailer\Exception\TemplatingException
+     * @throws \Charcoal\Mailer\Exceptions\TemplatingException
      */
     public function compose(?Sender $sender = null): Message
     {

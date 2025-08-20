@@ -1,20 +1,14 @@
 <?php
-/*
- * This file is a part of "charcoal-dev/mailer" package.
- * https://github.com/charcoal-dev/mailer
- *
- * Copyright (c) Furqan A. Siddiqui <hello@furqansiddiqui.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code or visit following link:
- * https://github.com/charcoal-dev/mailer/blob/master/LICENSE
+/**
+ * Part of the "charcoal-dev/mailer" package.
+ * @link https://github.com/charcoal-dev/mailer
  */
 
 declare(strict_types=1);
 
 namespace Charcoal\Mailer\Templating;
 
-use Charcoal\Mailer\Exception\TemplatingException;
+use Charcoal\Mailer\Exceptions\TemplatingException;
 
 /**
  * Class Modifiers
@@ -83,7 +77,7 @@ class Modifiers
      * @param string|int|array|null $value
      * @param array $args
      * @return string|int|array|null
-     * @throws \Charcoal\Mailer\Exception\TemplatingException
+     * @throws \Charcoal\Mailer\Exceptions\TemplatingException
      */
     public function apply(string $modifier, string|int|array|null $value, array $args = []): string|int|array|null
     {

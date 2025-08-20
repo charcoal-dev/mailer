@@ -1,20 +1,14 @@
 <?php
-/*
- * This file is a part of "charcoal-dev/mailer" package.
- * https://github.com/charcoal-dev/mailer
- *
- * Copyright (c) Furqan A. Siddiqui <hello@furqansiddiqui.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code or visit following link:
- * https://github.com/charcoal-dev/mailer/blob/master/LICENSE
+/**
+ * Part of the "charcoal-dev/mailer" package.
+ * @link https://github.com/charcoal-dev/mailer
  */
 
 declare(strict_types=1);
 
 namespace Charcoal\Mailer\Templating;
 
-use Charcoal\Mailer\Exception\DataBindException;
+use Charcoal\Mailer\Exceptions\DataBindException;
 
 /**
  * Trait DataBindingTrait
@@ -29,7 +23,7 @@ trait DataBindingTrait
      * @param string $key
      * @param string|int|float|array|object $value
      * @return $this
-     * @throws \Charcoal\Mailer\Exception\DataBindException
+     * @throws \Charcoal\Mailer\Exceptions\DataBindException
      */
     public function set(string $key, string|int|float|array|object $value): static
     {
@@ -74,7 +68,7 @@ trait DataBindingTrait
      * @param array|object $data
      * @param array $key
      * @return array
-     * @throws \Charcoal\Mailer\Exception\DataBindException
+     * @throws \Charcoal\Mailer\Exceptions\DataBindException
      */
     private function sanitizeArray(array|object $data, array $key): array
     {
@@ -108,7 +102,7 @@ trait DataBindingTrait
      * @param string|int|float|bool|null $value
      * @param array $key
      * @return string|int|null
-     * @throws \Charcoal\Mailer\Exception\DataBindException
+     * @throws \Charcoal\Mailer\Exceptions\DataBindException
      */
     private function sanitizeValue(string|int|float|bool|null $value, array $key): string|int|null
     {
