@@ -18,7 +18,7 @@ use Charcoal\Mailer\Message\Sender;
  * Class Mailer
  * @package Charcoal\Mailer
  */
-final readonly class Mailer
+final class Mailer
 {
     public const string VERSION = "0.2.0";
 
