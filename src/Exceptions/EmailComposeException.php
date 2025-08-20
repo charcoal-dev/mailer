@@ -12,11 +12,11 @@
 
 declare(strict_types=1);
 
-namespace Charcoal\Mailer\Exception;
+namespace Charcoal\Mailer\Exceptions;
 
 /**
  * Class EmailComposeException
- * @package Charcoal\Mailer\Exception
+ * @package Charcoal\Mailer\Exceptions
  */
 class EmailComposeException extends MailerException
 {

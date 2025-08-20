@@ -12,23 +12,23 @@
 
 declare(strict_types=1);
 
-namespace Charcoal\Mailer\Exception;
+namespace Charcoal\Mailer\Exceptions;
 
 /**
  * Class SmtpClientException
- * @package Charcoal\Mailer\Exception
+ * @package Charcoal\Mailer\Exceptions
  */
 class SmtpClientException extends MailerException
 {
-    public const CONNECTION_ERROR = 0x1a;
-    public const UNEXPECTED_RESPONSE = 0x1b;
-    public const TLS_NOT_AVAILABLE = 0x1c;
-    public const TLS_NEGOTIATE_FAIL = 0x1d;
-    public const INVALID_RECIPIENT = 0x14e;
-    public const AUTH_UNAVAILABLE = 0x1f;
-    public const AUTH_FAILED = 0x20;
-    public const EXCEEDS_MAX_SIZE = 0x21;
-    public const TIMED_OUT = 0x22;
+    public const int CONNECTION_ERROR = 0x1a;
+    public const int UNEXPECTED_RESPONSE = 0x1b;
+    public const int TLS_NOT_AVAILABLE = 0x1c;
+    public const int TLS_NEGOTIATE_FAIL = 0x1d;
+    public const int INVALID_RECIPIENT = 0x14e;
+    public const int AUTH_UNAVAILABLE = 0x1f;
+    public const int AUTH_FAILED = 0x20;
+    public const int EXCEEDS_MAX_SIZE = 0x21;
+    public const int TIMED_OUT = 0x22;
 
     /**
      * @return static

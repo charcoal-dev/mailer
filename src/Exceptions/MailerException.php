@@ -12,12 +12,12 @@
 
 declare(strict_types=1);
 
-namespace Charcoal\Mailer\Exception;
+namespace Charcoal\Mailer\Exceptions;
 
 /**
- * Class TemplatingException
- * @package Charcoal\Mailer\Exception
+ * Class MailerException
+ * @package Charcoal\Mailer\Exceptions
  */
-class TemplatingException extends MailerException
+class MailerException extends \Exception
 {
 }
