@@ -18,16 +18,16 @@ namespace Charcoal\Mailer\Message;
  * Class CompiledMimeMessage
  * @package Charcoal\Mailer\Message
  */
-class CompiledMimeMessage
+readonly class CompiledMimeMessage
 {
     /**
      * @param string $subject
      * @param string $compiledMimeBody
-     * @param \Charcoal\Mailer\Message\Sender $sender
+     * @param Sender $sender
      */
     public function __construct(
-        public readonly string $subject,
-        public readonly string $compiledMimeBody,
+        public string $subject,
+        public string $compiledMimeBody,
         public Sender          $sender,
     )
     {

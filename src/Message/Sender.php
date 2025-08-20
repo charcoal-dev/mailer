@@ -18,13 +18,16 @@ namespace Charcoal\Mailer\Message;
  * Class Sender
  * @package Charcoal\Mailer\Message
  */
-class Sender
+readonly class Sender
 {
     /**
      * @param string $email
      * @param string|null $name
      */
-    public function __construct(public readonly string $email, public readonly ?string $name = null)
+    public function __construct(
+        public string  $email,
+        public ?string $name = null
+    )
     {
     }
 }

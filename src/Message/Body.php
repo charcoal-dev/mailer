@@ -18,13 +18,12 @@ namespace Charcoal\Mailer\Message;
  * Class Body
  * @package Charcoal\Mailer\Message
  */
-class Body
+readonly class Body
 {
-    /**
-     * @param string|null $html
-     * @param string|null $plainText
-     */
-    public function __construct(public readonly ?string $html, public readonly ?string $plainText)
+    public function __construct(
+        public ?string $html,
+        public ?string $plainText
+    )
     {
     }
 }

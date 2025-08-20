@@ -14,16 +14,16 @@ declare(strict_types=1);
 
 namespace Charcoal\Mailer\Message;
 
-use Charcoal\Mailer\Exception\EmailComposeException;
+use Charcoal\Mailer\Exceptions\EmailComposeException;
 
 /**
  * Class Attachment
  * @package Charcoal\Mailer\Message
  */
-class Attachment
+readonly class Attachment
 {
-    public readonly string $name;
-    public readonly string $contentType;
+    public string $name;
+    public string $contentType;
 
     /**
      * @param string $filePath
@@ -31,17 +31,17 @@ class Attachment
      * @param string|null $contentType
      * @param string $disposition
      * @param string|null $contentId
-     * @throws \Charcoal\Mailer\Exception\EmailComposeException
+     * @throws \Charcoal\Mailer\Exceptions\EmailComposeException
      */
     public function __construct(
-        public readonly string  $filePath,
-        ?string                 $name = null,
-        ?string                 $contentType = null,
-        public readonly string  $disposition = "attachment",
-        public readonly ?string $contentId = null
+        public string  $filePath,
+        ?string        $name = null,
+        ?string        $contentType = null,
+        public string  $disposition = "attachment",
+        public ?string $contentId = null
     )
     {
-        // Check if file exists and is readable
+        // Check if a file exists and is readable
         if (!is_file($this->filePath) || !is_readable($filePath)) {
             throw EmailComposeException::AttachmentUnreadable($filePath);
         }
@@ -69,7 +69,7 @@ class Attachment
 
     /**
      * @return array
-     * @throws \Charcoal\Mailer\Exception\EmailComposeException
+     * @throws \Charcoal\Mailer\Exceptions\EmailComposeException
      */
     public function mime(): array
     {

@@ -12,15 +12,14 @@
 
 declare(strict_types=1);
 
-namespace Charcoal\Mailer\Message;
+namespace Charcoal\Mailer\Enums;
 
 /**
- * Class EndOfLine
- * @package Charcoal\Mailer\Message
+ * Enumeration representing different types of End-Of-Line (EOL) characters.
  */
-enum EndOfLine: string
+enum EOL: string
 {
-    case UNIX = "\n";
-    case WINDOWS = "\r\n";
+    case Unix = "\n";
+    case Windows = "\r\n";
     case CR = "\r";
 }
