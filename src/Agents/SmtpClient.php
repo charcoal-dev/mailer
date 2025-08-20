@@ -14,7 +14,8 @@ declare(strict_types=1);
 
 namespace Charcoal\Mailer\Agents;
 
-use Charcoal\Mailer\Exception\SmtpClientException;
+use Charcoal\Mailer\Enums\EOL;
+use Charcoal\Mailer\Exceptions\SmtpClientException;
 use Charcoal\Mailer\Message;
 use Charcoal\Mailer\Message\CompiledMimeMessage;
 
@@ -25,7 +26,7 @@ use Charcoal\Mailer\Message\CompiledMimeMessage;
 class SmtpClient implements MailerAgentInterface
 {
     public bool $keepAlive = false;
-    public Message\EndOfLine $eolChar;
+    public EOL $eolChar;
     private array $streamContextOptions = [];
     private array $serverOptions;
     private string $lastResponse = "";
@@ -54,7 +55,7 @@ class SmtpClient implements MailerAgentInterface
     )
     {
         $this->stream = null;
-        $this->eolChar = Message\EndOfLine::from(PHP_EOL);
+        $this->eolChar = \Charcoal\Mailer\Enums\EOL::from(PHP_EOL);
         $this->resetServerOptions();
     }
 
@@ -62,6 +63,7 @@ class SmtpClient implements MailerAgentInterface
      * Set stream context options
      * @param array $options
      * @return SmtpClient
+     * @api
      */
     public function streamContextOptions(array $options): static
     {
@@ -72,7 +74,7 @@ class SmtpClient implements MailerAgentInterface
     /**
      * Establish connection to SMTP server or revive existing one
      * @return void
-     * @throws \Charcoal\Mailer\Exception\SmtpClientException
+     * @throws \Charcoal\Mailer\Exceptions\SmtpClientException
      */
     public function connect(): void
     {
@@ -149,6 +151,7 @@ class SmtpClient implements MailerAgentInterface
 
     /**
      * @return array
+     * @api
      */
     public function getServerOptions(): array
     {
@@ -157,6 +160,7 @@ class SmtpClient implements MailerAgentInterface
 
     /**
      * @return void
+     * @api
      */
     public function disconnect(): void
     {
@@ -218,7 +222,7 @@ class SmtpClient implements MailerAgentInterface
      * @param string|null $args
      * @param int $expect
      * @return string
-     * @throws \Charcoal\Mailer\Exception\SmtpClientException
+     * @throws \Charcoal\Mailer\Exceptions\SmtpClientException
      */
     public function command(string $command, string $args = null, int $expect = 0): string
     {
@@ -259,6 +263,7 @@ class SmtpClient implements MailerAgentInterface
 
     /**
      * @return string
+     * @api
      */
     public function lastResponse(): string
     {
@@ -277,8 +282,8 @@ class SmtpClient implements MailerAgentInterface
      * @param \Charcoal\Mailer\Message|\Charcoal\Mailer\Message\CompiledMimeMessage $message
      * @param array $recipients
      * @return int
-     * @throws \Charcoal\Mailer\Exception\EmailComposeException
-     * @throws \Charcoal\Mailer\Exception\SmtpClientException
+     * @throws \Charcoal\Mailer\Exceptions\EmailComposeException
+     * @throws \Charcoal\Mailer\Exceptions\SmtpClientException
      */
     public function send(Message|CompiledMimeMessage $message, array $recipients): int
     {
