@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Charcoal\Mailer;
 
-use Charcoal\Mailer\Agents\Sendmail;
+use Charcoal\Mailer\Support\Sendmail;
 use Charcoal\Mailer\Contracts\MailProviderInterface;
 use Charcoal\Mailer\Message\Body;
 use Charcoal\Mailer\Message\CompiledMimeMessage;

@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Charcoal\Mailer;
 
-use Charcoal\Mailer\Enums\EOL;
+use Charcoal\Mailer\Enums\EolByte;
 
 /**
  * Class ClientConfig
@@ -16,7 +16,7 @@ use Charcoal\Mailer\Enums\EOL;
  */
 readonly class ClientConfig
 {
-    public EOL $eolChar;
+    public EolByte $eolChar;
 
     /**
      * @param string $name
@@ -31,7 +31,7 @@ readonly class ClientConfig
         public string $boundary3Prefix = "--Charcoal_B3",
     )
     {
-        $this->eolChar = EOL::from(PHP_EOL);
+        $this->eolChar = EolByte::from(PHP_EOL);
     }
 
     /**

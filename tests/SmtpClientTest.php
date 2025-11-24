@@ -18,7 +18,7 @@ class SmtpClientTest extends \PHPUnit\Framework\TestCase
     public function testSmtpConnection(): void
     {
         $smtpConfig = include "SmtpConfig.php";
-        $smtpClient = new \Charcoal\Mailer\Agents\SmtpClient(
+        $smtpClient = new \Charcoal\Mailer\Smtp\SmtpClient(
             $smtpConfig["hostname"],
             $smtpConfig["port"],
             $smtpConfig["domain"],

@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Charcoal\Mailer;
 
-use Charcoal\Mailer\Enums\EOL;
+use Charcoal\Mailer\Enums\EolByte;
 use Charcoal\Mailer\Exceptions\EmailComposeException;
 use Charcoal\Mailer\Message\Attachment;
 use Charcoal\Mailer\Message\Body;
@@ -22,7 +22,7 @@ use Charcoal\Mailer\Message\Sender;
 class Message
 {
     public Sender $sender;
-    public EOL $eolChar;
+    public EolByte $eolChar;
     private array $headers = [];
     private array $attachments = [];
 

@@ -11,7 +11,7 @@ namespace Charcoal\Mailer\Enums;
 /**
  * Enumeration representing different types of End-Of-Line (EOL) characters.
  */
-enum EOL: string
+enum EolByte: string
 {
     case Unix = "\n";
     case Windows = "\r\n";

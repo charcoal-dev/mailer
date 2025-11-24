@@ -6,22 +6,23 @@
 
 declare(strict_types=1);
 
-namespace Charcoal\Mailer\Agents;
+namespace Charcoal\Mailer\Smtp;
 
 use Charcoal\Mailer\Contracts\MailProviderInterface;
-use Charcoal\Mailer\Enums\EOL;
+use Charcoal\Mailer\Enums\EolByte;
 use Charcoal\Mailer\Exceptions\SmtpClientException;
 use Charcoal\Mailer\Message;
 use Charcoal\Mailer\Message\CompiledMimeMessage;
 
 /**
- * Class SmtpClient
- * @package Charcoal\Mailer\Agents
+ * The SmtpClient class is responsible for establishing and managing connections
+ * to an SMTP server, along with sending messages using the SMTP protocol.
+ * It implements the MailProviderInterface to provide email sending functionality.
  */
 final class SmtpClient implements MailProviderInterface
 {
     public bool $keepAlive = false;
-    public EOL $eolChar;
+    public EolByte $eolChar;
     private array $streamContextOptions = [];
     private array $serverOptions;
     private string $lastResponse = "";
@@ -31,26 +32,12 @@ final class SmtpClient implements MailProviderInterface
     private $stream;
 
     /**
-     * @param string $host
-     * @param int $port
-     * @param string $domain
-     * @param bool $useTlsEncryption
-     * @param string|null $username
-     * @param string|null $password
-     * @param int $timeOut
+     * @param SmtpClientConfig $config
      */
-    public function __construct(
-        public readonly string      $host,
-        public readonly int         $port,
-        public readonly string      $domain,
-        public readonly bool        $useTlsEncryption = true,
-        public readonly string|null $username = null,
-        public readonly string|null $password = null,
-        public int                  $timeOut = 1
-    )
+    public function __construct(public readonly SmtpClientConfig $config)
     {
         $this->stream = null;
-        $this->eolChar = \Charcoal\Mailer\Enums\EOL::from(PHP_EOL);
+        $this->eolChar = \Charcoal\Mailer\Enums\EolByte::from(PHP_EOL);
         $this->resetServerOptions();
     }
 
@@ -60,7 +47,7 @@ final class SmtpClient implements MailProviderInterface
      * @return SmtpClient
      * @api
      */
-    public function streamContextOptions(array $options): static
+    public function streamContextOptions(array $options): self
     {
         $this->streamContextOptions = $options;
         return $this;
@@ -78,10 +65,10 @@ final class SmtpClient implements MailProviderInterface
             $errorMsg = "";
             $context = stream_context_create($this->streamContextOptions);
             $this->stream = stream_socket_client(
-                sprintf('%1$s:%2$d', $this->host, $this->port),
+                sprintf('%1$s:%2$d', $this->config->host, $this->config->port),
                 $errorNum,
                 $errorMsg,
-                $this->timeOut,
+                $this->config->timeOut,
                 STREAM_CLIENT_CONNECT,
                 $context
             );
@@ -97,11 +84,11 @@ final class SmtpClient implements MailProviderInterface
 
             // Fetch options/specs available to client domain from SMTP server
             $this->smtpServerOptions(
-                $this->command("EHLO", $this->domain)
+                $this->command("EHLO", $this->config->domain)
             );
 
             // Use TLS?
-            if ($this->useTlsEncryption === true) {
+            if ($this->config->startTls === true) {
                 if ($this->serverOptions["startTLS"] !== true) {
                     throw SmtpClientException::TlsNotAvailable();
                 }
@@ -112,7 +99,7 @@ final class SmtpClient implements MailProviderInterface
                     throw SmtpClientException::TlsNegotiateFailed();
                 }
 
-                $this->command("EHLO", $this->domain); // Resend EHLO command
+                $this->command("EHLO", $this->config->domain); // Resend EHLO command
             }
 
             // Authenticate

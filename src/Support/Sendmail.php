@@ -6,15 +6,14 @@
 
 declare(strict_types=1);
 
-namespace Charcoal\Mailer\Agents;
+namespace Charcoal\Mailer\Support;
 
 use Charcoal\Mailer\Contracts\MailProviderInterface;
 use Charcoal\Mailer\Message;
 use Charcoal\Mailer\Message\CompiledMimeMessage;
 
 /**
- * Class Sendmail
- * @package Charcoal\Mailer\Agents
+ * Final class responsible for sending emails using the PHP mail() function.
  */
 final class Sendmail implements MailProviderInterface
 {
