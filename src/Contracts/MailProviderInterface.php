@@ -6,16 +6,15 @@
 
 declare(strict_types=1);
 
-namespace Charcoal\Mailer\Agents;
+namespace Charcoal\Mailer\Contracts;
 
 use Charcoal\Mailer\Message;
 use Charcoal\Mailer\Message\CompiledMimeMessage;
 
 /**
- * Interface MailerAgentInterface
- * @package Charcoal\Mailer\Agents
+ * Interface for defining mail provider functionalities.
  */
-interface MailerAgentInterface
+interface MailProviderInterface
 {
     /**
      * @param CompiledMimeMessage|Message $message

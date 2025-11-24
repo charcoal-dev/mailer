@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace Charcoal\Mailer;
 
-use Charcoal\Mailer\Agents\MailerAgentInterface;
 use Charcoal\Mailer\Agents\Sendmail;
+use Charcoal\Mailer\Contracts\MailProviderInterface;
 use Charcoal\Mailer\Message\Body;
 use Charcoal\Mailer\Message\CompiledMimeMessage;
 use Charcoal\Mailer\Message\Sender;
@@ -22,14 +22,14 @@ final class Mailer
 {
     public const string VERSION = "0.2.0";
 
-    public MailerAgentInterface $agent;
+    public MailProviderInterface $agent;
     public ClientConfig $clientConfig;
 
     /**
      * @param Sender $sender
-     * @param MailerAgentInterface|null $agent
+     * @param MailProviderInterface|null $agent
      */
-    public function __construct(public Sender $sender, ?MailerAgentInterface $agent = null)
+    public function __construct(public Sender $sender, ?MailProviderInterface $agent = null)
     {
         $this->clientConfig = new ClientConfig();
         $this->agent = $agent ?? new Sendmail();

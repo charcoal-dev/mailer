@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Charcoal\Mailer\Agents;
 
+use Charcoal\Mailer\Contracts\MailProviderInterface;
 use Charcoal\Mailer\Message;
 use Charcoal\Mailer\Message\CompiledMimeMessage;
 
@@ -15,7 +16,7 @@ use Charcoal\Mailer\Message\CompiledMimeMessage;
  * Class Sendmail
  * @package Charcoal\Mailer\Agents
  */
-final class Sendmail implements MailerAgentInterface
+final class Sendmail implements MailProviderInterface
 {
     /**
      * @param Message|CompiledMimeMessage $message

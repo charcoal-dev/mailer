@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Charcoal\Mailer\Agents;
 
+use Charcoal\Mailer\Contracts\MailProviderInterface;
 use Charcoal\Mailer\Enums\EOL;
 use Charcoal\Mailer\Exceptions\SmtpClientException;
 use Charcoal\Mailer\Message;
@@ -17,7 +18,7 @@ use Charcoal\Mailer\Message\CompiledMimeMessage;
  * Class SmtpClient
  * @package Charcoal\Mailer\Agents
  */
-final class SmtpClient implements MailerAgentInterface
+final class SmtpClient implements MailProviderInterface
 {
     public bool $keepAlive = false;
     public EOL $eolChar;
