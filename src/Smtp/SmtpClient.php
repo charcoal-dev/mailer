@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Charcoal\Mailer\Smtp;
 
 use Charcoal\Mailer\Contracts\MailProviderInterface;
+use Charcoal\Mailer\Contracts\SmtpConfigInterface;
 use Charcoal\Mailer\Enums\EolByte;
 use Charcoal\Mailer\Exceptions\SmtpClientException;
 use Charcoal\Mailer\Message;
@@ -32,9 +33,9 @@ final class SmtpClient implements MailProviderInterface
     private $stream;
 
     /**
-     * @param SmtpClientConfig $config
+     * @param SmtpConfigInterface $config
      */
-    public function __construct(public readonly SmtpClientConfig $config)
+    public function __construct(public readonly SmtpConfigInterface $config)
     {
         $this->stream = null;
         $this->eolChar = \Charcoal\Mailer\Enums\EolByte::from(PHP_EOL);
@@ -65,10 +66,10 @@ final class SmtpClient implements MailProviderInterface
             $errorMsg = "";
             $context = stream_context_create($this->streamContextOptions);
             $this->stream = stream_socket_client(
-                sprintf('%1$s:%2$d', $this->config->host, $this->config->port),
+                $this->config->getHostString(),
                 $errorNum,
                 $errorMsg,
-                $this->config->timeOut,
+                $this->config->getTimeout(),
                 STREAM_CLIENT_CONNECT,
                 $context
             );
@@ -77,18 +78,18 @@ final class SmtpClient implements MailProviderInterface
                 throw SmtpClientException::ConnectionError($errorNum, $errorMsg);
             }
 
-            $this->read(); // Read response from server
+            $this->read(); // Read response from the server
             if ($this->lastResponseCode() !== 220) {
                 throw SmtpClientException::UnexpectedResponse("CONNECT", 220, $this->lastResponseCode());
             }
 
             // Fetch options/specs available to client domain from SMTP server
             $this->smtpServerOptions(
-                $this->command("EHLO", $this->config->domain)
+                $this->command("EHLO", $this->config->getDomain())
             );
 
             // Use TLS?
-            if ($this->config->startTls === true) {
+            if ($this->config->useTls() === true) {
                 if ($this->serverOptions["startTLS"] !== true) {
                     throw SmtpClientException::TlsNotAvailable();
                 }
@@ -99,7 +100,7 @@ final class SmtpClient implements MailProviderInterface
                     throw SmtpClientException::TlsNegotiateFailed();
                 }
 
-                $this->command("EHLO", $this->config->domain); // Resend EHLO command
+                $this->command("EHLO", $this->config->getDomain()); // Resend EHLO command
             }
 
             // Authenticate
@@ -199,7 +200,7 @@ final class SmtpClient implements MailProviderInterface
     }
 
     /**
-     * Send command to server, read response, and make sure response code matches expected code
+     * Send command to server, read the response, and make sure response code matches expected code
      * @param string $command
      * @param string|null $args
      * @param int $expect
