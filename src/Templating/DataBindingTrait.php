@@ -8,8 +8,6 @@ declare(strict_types=1);
 
 namespace Charcoal\Mailer\Templating;
 
-use Charcoal\Mailer\Exceptions\DataBindException;
-
 /**
  * Trait DataBindingTrait
  * @package Charcoal\Mailer\Templating
@@ -20,10 +18,7 @@ trait DataBindingTrait
     protected array $bound = [];
 
     /**
-     * @param string $key
-     * @param string|int|float|array|object $value
-     * @return $this
-     * @throws \Charcoal\Mailer\Exceptions\DataBindException
+     * Bind a value to a key.
      */
     public function set(string $key, string|int|float|array|object $value): static
     {
@@ -68,7 +63,6 @@ trait DataBindingTrait
      * @param array|object $data
      * @param array $key
      * @return array
-     * @throws \Charcoal\Mailer\Exceptions\DataBindException
      */
     private function sanitizeArray(array|object $data, array $key): array
     {
@@ -78,8 +72,9 @@ trait DataBindingTrait
                 true,
                 flags: JSON_THROW_ON_ERROR
             );
-        } catch (\JsonException) {
-            throw new DataBindException(sprintf('Failed to apply JSON filter to data "%s"', implode(".", $key)));
+        } catch (\JsonException $e) {
+            throw new \RuntimeException(sprintf('Failed to apply JSON filter to data "%s"', implode(".", $key)),
+                previous: $e);
         }
 
         $sanitized = [];
@@ -102,7 +97,6 @@ trait DataBindingTrait
      * @param string|int|float|bool|null $value
      * @param array $key
      * @return string|int|null
-     * @throws \Charcoal\Mailer\Exceptions\DataBindException
      */
     private function sanitizeValue(string|int|float|bool|null $value, array $key): string|int|null
     {
@@ -119,7 +113,7 @@ trait DataBindingTrait
         }
 
         if (!is_string($value) && !is_int($value)) {
-            throw new DataBindException(
+            throw new \InvalidArgumentException(
                 sprintf('Invalid value of type "%s" for key "%s"', gettype($value), implode(".", $key))
             );
         }
