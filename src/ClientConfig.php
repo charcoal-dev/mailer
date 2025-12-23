@@ -11,10 +11,9 @@ namespace Charcoal\Mailer;
 use Charcoal\Mailer\Enums\EolByte;
 
 /**
- * Class ClientConfig
- * @package Charcoal\Mailer
+ * Represents the configuration for a client, including name and MIME boundary options.
  */
-readonly class ClientConfig
+final class ClientConfig
 {
     public EolByte $eolChar;
 
