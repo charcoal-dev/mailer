@@ -12,7 +12,7 @@ namespace Charcoal\Mailer\Contracts;
  * Interface SmtpConfigInterface
  * Provides the structure for accessing SMTP configuration settings.
  */
-interface SmtpConfigInterface
+interface SmtpConfigInterface extends MailProviderConfigInterface
 {
     public function getHostString(): string;
 
@@ -21,4 +21,8 @@ interface SmtpConfigInterface
     public function useTls(): bool;
 
     public function getTimeout(): int;
+
+    public function getUsername(): string;
+
+    public function getPassword(): string;
 }

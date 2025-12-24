@@ -10,7 +10,6 @@ namespace Charcoal\Mailer\Smtp;
 
 use Charcoal\Mailer\Contracts\MailProviderInterface;
 use Charcoal\Mailer\Contracts\SmtpConfigInterface;
-use Charcoal\Mailer\Enums\EolByte;
 use Charcoal\Mailer\Exceptions\SmtpClientException;
 use Charcoal\Mailer\Message;
 use Charcoal\Mailer\Message\CompiledMimeMessage;
@@ -23,7 +22,6 @@ use Charcoal\Mailer\Message\CompiledMimeMessage;
 final class SmtpClient implements MailProviderInterface
 {
     public bool $keepAlive = false;
-    public EolByte $eolChar;
     private array $streamContextOptions = [];
     private array $serverOptions;
     private string $lastResponse = "";
@@ -38,7 +36,6 @@ final class SmtpClient implements MailProviderInterface
     public function __construct(public readonly SmtpConfigInterface $config)
     {
         $this->stream = null;
-        $this->eolChar = \Charcoal\Mailer\Enums\EolByte::from(PHP_EOL);
         $this->resetServerOptions();
     }
 
@@ -107,19 +104,25 @@ final class SmtpClient implements MailProviderInterface
             if ($this->serverOptions["authLogin"] === true) {
                 try {
                     $this->command("AUTH LOGIN", null, 334);
-                    $this->command(base64_encode($this->username ?? " "), null, 334);
-                    $this->command(base64_encode($this->password ?? " "), null, 235);
+                    $this->command(base64_encode($this->config->getUsername() ?? " "), null, 334);
+                    $this->command(base64_encode($this->config->getPassword() ?? " "), null, 235);
                 } catch (SmtpClientException) {
                     throw SmtpClientException::AuthFailed($this->lastResponse);
                 }
             } elseif ($this->serverOptions["authPlain"] === true) {
-                throw SmtpClientException::AuthUnavailable();
+                try {
+                    $auth = base64_encode("\0" . $this->config->getUsername() . "\0" . $this->config->getPassword());
+                    $this->command("AUTH PLAIN", $auth, 235);
+                } catch (SmtpClientException) {
+                    throw SmtpClientException::AuthFailed($this->lastResponse);
+                }
             } else {
                 throw SmtpClientException::AuthUnavailable();
             }
         } else {
             try {
-                if (!stream_get_meta_data($this->stream)["timed_out"]) {
+                $meta = stream_get_meta_data($this->stream);
+                if ($meta["timed_out"]) {
                     throw SmtpClientException::TimedOut();
                 }
 
@@ -147,6 +150,9 @@ final class SmtpClient implements MailProviderInterface
      */
     public function disconnect(): void
     {
+        if ($this->stream) {
+            fclose($this->stream);
+        }
         $this->stream = null;
         $this->resetServerOptions();
     }
@@ -174,25 +180,31 @@ final class SmtpClient implements MailProviderInterface
         $this->resetServerOptions();
 
         // Read from response
-        $lines = explode($this->eolChar->value, $response);
+        $lines = explode("\r\n", $response);
         foreach ($lines as $line) {
+            $line = trim($line);
+            if (empty($line)) {
+                continue;
+            }
+
             $code = intval(substr($line, 0, 3));
             $spec = substr($line, 4);
             if ($spec && in_array($code, [220, 250])) {
-                $spec = explode(" ", strtolower($spec));
-                if ($spec[0] === "auth") {
-                    if (in_array("plain", $spec)) {
+                $specArgs = explode(" ", strtolower($spec));
+                $verb = $specArgs[0];
+                if ($verb === "auth") {
+                    if (in_array("plain", $specArgs)) {
                         $this->serverOptions["authPlain"] = true;
                     }
 
-                    if (in_array("login", $spec)) {
+                    if (in_array("login", $specArgs)) {
                         $this->serverOptions["authLogin"] = true;
                     }
-                } elseif ($spec[0] === "size") {
-                    $this->serverOptions["size"] = intval($spec[1]);
-                } elseif ($spec[0] === "8bitmime") {
+                } elseif ($verb === "size") {
+                    $this->serverOptions["size"] = isset($specArgs[1]) ? intval($specArgs[1]) : 0;
+                } elseif ($verb === "8bitmime") {
                     $this->serverOptions["8Bit"] = true;
-                } elseif ($spec[0] === "starttls") {
+                } elseif ($verb === "starttls") {
                     $this->serverOptions["startTLS"] = true;
                 }
             }
@@ -229,7 +241,7 @@ final class SmtpClient implements MailProviderInterface
      */
     private function write(string $command): void
     {
-        fwrite($this->stream, $command . $this->eolChar->value);
+        fwrite($this->stream, $command . "\r\n");
     }
 
     /**
@@ -238,9 +250,25 @@ final class SmtpClient implements MailProviderInterface
      */
     private function read(): string
     {
-        $this->lastResponse = fread($this->stream, 1024); // Read up to 1KB
-        $this->lastResponseCode = intval(explode(" ", $this->lastResponse)[0]);
-        $this->lastResponseCode = $this->lastResponseCode > 0 ? $this->lastResponseCode : -1;
+        $this->lastResponse = "";
+        while ($line = fgets($this->stream, 1024)) {
+            $this->lastResponse .= $line;
+            // Check if this is the last line of a multi-line response (RFC 5321)
+            // A space after the response code indicates the last line.
+            if (isset($line[3]) && $line[3] === " ") {
+                break;
+            }
+
+            // If it's a single-line response without space (rare but possible in some implementations)
+            if (strlen($line) >= 3 && !isset($line[3])) {
+                break;
+            }
+        }
+
+        $this->lastResponseCode = intval(substr($this->lastResponse, 0, 3));
+        if ($this->lastResponseCode <= 0) {
+            $this->lastResponseCode = -1;
+        }
         return $this->lastResponse;
     }
 
@@ -280,12 +308,7 @@ final class SmtpClient implements MailProviderInterface
         $this->command(sprintf('MAIL FROM:<%1$s>', $message->senderEmail), null, 250); // Set mail from
         $count = 0;
         foreach ($recipients as $email) {
-            $this->write(sprintf('RCPT TO:<%1$s>', $email));
-            $this->read();
-            if ($this->lastResponseCode !== 250) {
-                throw SmtpClientException::InvalidRecipient(substr($this->lastResponse, 4));
-            }
-
+            $this->command(sprintf('RCPT TO:<%1$s>', $email), null, 250);
             $count++;
         }
 
@@ -295,14 +318,25 @@ final class SmtpClient implements MailProviderInterface
         }
 
         $this->command("DATA", null, 354);
-        $this->write($message->compiled); // Write MIME
+
+        // Period stuffing (RFC 5321 Section 4.5.2)
+        $data = $message->compiled;
+        if (str_starts_with($data, ".")) {
+            $data = "." . $data;
+        }
+
+        $data = str_replace("\r\n.", "\r\n..", $data);
+        $this->write($data); // Write MIME
         $this->command(".", null, 250); // End DATA
 
         // Keep alive?
         if (!$this->keepAlive) {
-            $this->write("QUIT"); // Send QUIT command
-            //unset($this->stream);
-            $this->stream = null;  // Close stream resource
+            try {
+                $this->command("QUIT", null, 221);
+            } catch (SmtpClientException) {
+            }
+
+            $this->disconnect();
         }
 
         return $count;
