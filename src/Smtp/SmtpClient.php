@@ -305,14 +305,14 @@ final class SmtpClient implements MailProviderInterface
         $this->connect(); // Establish or revive connection
         $this->command("RSET"); // Reset SMTP buffer
 
-        $this->command(sprintf('MAIL FROM:<%1$s>', $message->senderEmail), null, 250); // Set mail from
+        $this->command(sprintf('MAIL FROM:<%1$s>', $message->sender->email), null, 250); // Set mail from
         $count = 0;
         foreach ($recipients as $email) {
             $this->command(sprintf('RCPT TO:<%1$s>', $email), null, 250);
             $count++;
         }
 
-        $messageMimeSize = strlen($message->compiled);
+        $messageMimeSize = strlen($message->compiledMimeBody);
         if ($this->serverOptions["size"] > 0 && $messageMimeSize > $this->serverOptions["size"]) {
             throw SmtpClientException::ExceedsMaximumSize($messageMimeSize, $this->serverOptions["size"]);
         }
@@ -320,7 +320,7 @@ final class SmtpClient implements MailProviderInterface
         $this->command("DATA", null, 354);
 
         // Period stuffing (RFC 5321 Section 4.5.2)
-        $data = $message->compiled;
+        $data = $message->compiledMimeBody;
         if (str_starts_with($data, ".")) {
             $data = "." . $data;
         }
