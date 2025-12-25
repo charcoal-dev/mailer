@@ -29,7 +29,7 @@ class Modifiers
 
         $this->register("date", function (mixed $value, array $args) {
             if (!is_int($value) || $value < 0) {
-                throw new \RuntimeException('Invalid timestamp passed to modifier "data"');
+                throw new \RuntimeException('Invalid timestamp passed to modifier "date"');
             }
 
             $format = $args[0] ?? "d M Y H:i A";
