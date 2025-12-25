@@ -19,13 +19,15 @@ class SmtpClientTest extends \PHPUnit\Framework\TestCase
     {
         $smtpConfig = include "SmtpConfig.php";
         $smtpClient = new \Charcoal\Mailer\Smtp\SmtpClient(
-            $smtpConfig["hostname"],
-            $smtpConfig["port"],
-            $smtpConfig["domain"],
-            $smtpConfig["encryption"],
-            $smtpConfig["username"],
-            $smtpConfig["password"],
-            $smtpConfig["timeout"],
+            new \Charcoal\Mailer\Smtp\SmtpClientConfig(
+                $smtpConfig["hostname"],
+                $smtpConfig["port"],
+                $smtpConfig["domain"],
+                $smtpConfig["encryption"],
+                $smtpConfig["username"],
+                $smtpConfig["password"],
+                $smtpConfig["timeout"],
+            )
         );
 
         $smtpClient->connect();

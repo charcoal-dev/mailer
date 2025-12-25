@@ -87,7 +87,6 @@ class TemplatingEngine
      * @param string $subject
      * @param string|null $preHeader
      * @return RawTemplatedEmail
-     * @throws Exceptions\DataBindException
      * @throws TemplatingException
      */
     public function create(

@@ -34,7 +34,6 @@ class TemplatingTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @return void
-     * @throws \Charcoal\Mailer\Exceptions\DataBindException
      * @throws \Charcoal\Mailer\Exceptions\TemplatingException
      */
     public function testTemplateEmail(): void
@@ -42,7 +41,7 @@ class TemplatingTest extends \PHPUnit\Framework\TestCase
         $templatingEngine = $this->getTemplatingEngine();
         $templatingEngine->modifiers->registerDefaultModifiers();
 
-        // Data binding on TemplateEngine level
+        // Data binding on the TemplateEngine level
         $templatingEngine->set("config", [
             "title" => "Charcoal PHP Framework",
             "domain" => "charcoal.dev"
@@ -53,7 +52,7 @@ class TemplatingTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(str_starts_with($defaultTemplate->html, "<!DOCTYPE html>"), "Beginning of HTML template");
         $this->assertTrue(str_ends_with($defaultTemplate->html, "</html>"), "Ending of HTML template");
 
-        // Data binging on HTML template level
+        // Data binging on the HTML template level
         $defaultTemplate->set("template", "default");
 
         // TemplateEngine level data does NOT YET exist on template
